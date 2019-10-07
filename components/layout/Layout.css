@@ -1,0 +1,72 @@
+gyro-layout {
+    box-sizing: border-box;
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+}
+
+gyro-layout-column {
+    position: relative;
+    display: inline-grid;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+gyro-group {
+    position: relative;
+    overflow: hidden;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    margin: 3px;
+    background: var(--gyro-dark-grey);
+    color: #eee;
+}
+
+gyro-group > [tab]:not([active]) {
+    display: none;
+    pointer-events: none;
+}
+
+gyro-group[drag-over]::after {
+    content: '';
+    background: white;
+    opacity: 0.05;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.split-bar {
+    z-index: 100000;
+    position: absolute;
+    left: calc(var(--x, 0) * 1px);
+    top: 3px;
+    bottom: 3px;
+    width: calc(var(--w, 0) * 1px);
+    transform: translate(-50%, 0);
+    opacity: 0.25;
+    border-radius: 10px;
+    background: var(--gyro-highlight-grey);
+}
+.split-bar:active {
+    background: var(--gyro-accent-color);
+}
+.split-bar::after {
+    content: "";
+    z-index: 10000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100px;
+    transform: translate(-50%, 0);
+    cursor: col-resize;
+}

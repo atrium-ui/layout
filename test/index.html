@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=0.7"/>
+    <meta name="theme-color" content="#272727"/>
+    <title>Gyro Layout</title>
+
+    <link rel="stylesheet" href="../components/layout/Layout.css"/>
+    <script type="module" src="../components/layout/Layout.js"></script>
+
+    <link rel="stylesheet" href="./main.css"/>
+</head>
+
+<body>
+    <gyro-layout>
+
+        <gyro-layout-column>
+            <gyro-group show-tabs>
+                <placeholder tab="Placeholder">1</placeholder>
+                <placeholder tab="Placeholder">2</placeholder>
+            </gyro-group>
+        </gyro-layout-column>
+
+        <gyro-layout-column>
+            <gyro-group show-tabs>
+                <placeholder tab="Placeholder">3</placeholder>
+            </gyro-group>
+        </gyro-layout-column>
+
+        <gyro-layout-column class="sidepanel">
+            <gyro-group show-tabs>
+                <placeholder tab="Placeholder">4</placeholder>
+            </gyro-group>
+
+            <gyro-group show-tabs>
+                <placeholder tab="Placeholder">5</placeholder>
+                <placeholder tab="Placeholder">6</placeholder>
+            </gyro-group>
+        </gyro-layout-column>
+        
+    </gyro-layout>
+</body>
+
+</html>
