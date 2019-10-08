@@ -120,10 +120,35 @@ export default class Group extends Column {
 
 	initializeDragAndDropHandlers() {
 
+		let insertPosition = 0;
+
 		const dragOverHandler = e => {
 			e.preventDefault();
+
+			const bounds = this.getBoundingClientRect();
+
+			const x = e.x;
+			const y = e.y;
+
+			const area = bounds.height / 5;
+
+			if(y < bounds.top + area) {
+				this.style.setProperty('--height', area + 'px');
+
+				insertPosition = -1;
+			} else if(y > bounds.bottom - area) {
+				this.style.setProperty('--height', area + 'px');
+				this.style.setProperty('--top', bounds.height - area + 'px');
+
+				insertPosition = 1;
+			} else {
+				this.removeAttribute('style');
+
+				insertPosition = 0;
+			}
 			
 			this.setAttribute('drag-over', '');
+
 			e.dataTransfer.dropEffect = "move";
 		}
 
@@ -140,7 +165,22 @@ export default class Group extends Column {
 			const component = document.querySelector('['+targetId+']');
 
 			component.parentNode.removeChild(component);
-			this.appendChild(component);
+
+			switch(insertPosition) {
+				case -1:
+					const newGroupAbove = this.cloneNode();
+					newGroupAbove.appendChild(component);
+					this.parentNode.insertBefore(newGroupAbove, this);
+					break;
+				case 0:
+					this.appendChild(component);
+					break;
+				case 1:
+					const newGroupBelow = this.cloneNode();
+					newGroupBelow.appendChild(component);
+					this.parentNode.insertBefore(newGroupBelow, this.nextSibling);
+					break;
+			}
 		}
 
 		this.addEventListener('dragover', dragOverHandler);
