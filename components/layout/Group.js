@@ -185,6 +185,7 @@ export default class Group extends Column {
 			switch(insertPosition) {
 				case -2:
 					const newLeftColumn = this.parentNode.cloneNode();
+					this.parentNode.width -= 500;
 					newLeftColumn.width = 500;
 					const newGroupLeft = this.cloneNode();
 					newGroupLeft.appendChild(component);
@@ -210,6 +211,7 @@ export default class Group extends Column {
 					
 				case 2:
 					const newRightColumn = this.parentNode.cloneNode();
+					this.parentNode.width -= 500;
 					newRightColumn.width = 500;
 					const newGroupRight = this.cloneNode();
 					newGroupRight.appendChild(component);
