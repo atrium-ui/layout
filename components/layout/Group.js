@@ -260,6 +260,24 @@ export default class Group extends Column {
 				tab.ondragend = e => {
 					component.removeAttribute('drag-target');
 				}
+
+				const replaceView = (nodeName, tabName) => {	
+					const newTab = document.createElement(nodeName);	
+					newTab.setAttribute('tab', tabName);	
+					this.replaceChild(newTab, component);	
+				}
+
+				tab.contextMenu = {	
+					'viewer': () => replaceView('gyro-image-editor', 'imageviewer.title'),	
+					'3D view': () => replaceView('gyro-viewport', 'viewport.title'),	
+					'properties': () => replaceView('gyro-propperties', 'propperties.title'),	
+					'assets': () => replaceView('gyro-assets', 'assets.title'),	
+					'console': () => replaceView('gyro-console', 'console.title'),	
+					'node editor': () => replaceView('gyro-editor', 'editor.title'),	
+					'close': () => {	
+						this.removeChild(component);
+					},	
+				}
 			}
 
 			return tab;
