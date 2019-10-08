@@ -177,9 +177,8 @@ export default class Group extends Column {
 			const targetId = e.dataTransfer.getData("tab");
 			const component = document.querySelector('['+targetId+']');
 
-			if(component.parentNode === this) {
+			if(insertPosition === 0 && component.parentNode === this) 
 				return;
-			}
 
 			component.parentNode.removeChild(component);
 
