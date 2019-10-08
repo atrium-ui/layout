@@ -130,7 +130,10 @@ export default class Group extends Column {
 			const x = e.x;
 			const y = e.y;
 
-			const area = bounds.height / 5;
+			const area = bounds.height / 8;
+			
+			this.removeAttribute('style');
+			insertPosition = 0;
 
 			if(y < bounds.top + area) {
 				this.style.setProperty('--height', area + 'px');
@@ -141,10 +144,15 @@ export default class Group extends Column {
 				this.style.setProperty('--top', bounds.height - area + 'px');
 
 				insertPosition = 1;
-			} else {
-				this.removeAttribute('style');
+			} else if(x < bounds.left + area) {
+				this.style.setProperty('--width', area + 'px');
 
-				insertPosition = 0;
+				insertPosition = -2;
+			} else if(x > bounds.right - area) {
+				this.style.setProperty('--width', area + 'px');
+				this.style.setProperty('--left', bounds.width - area + 'px');
+
+				insertPosition = 2;
 			}
 			
 			this.setAttribute('drag-over', '');
@@ -164,23 +172,49 @@ export default class Group extends Column {
 			const targetId = e.dataTransfer.getData("tab");
 			const component = document.querySelector('['+targetId+']');
 
+			if(component.parentNode === this) {
+				return;
+			}
+
 			component.parentNode.removeChild(component);
 
 			switch(insertPosition) {
+				case -2:
+					const newLeftColumn = this.parentNode.cloneNode();
+					newLeftColumn.width = 500;
+					const newGroupLeft = this.cloneNode();
+					newGroupLeft.appendChild(component);
+					newLeftColumn.appendChild(newGroupLeft);
+					this.parentNode.parentNode.insertBefore(newLeftColumn, this.parentNode);
+					break;
+
 				case -1:
 					const newGroupAbove = this.cloneNode();
 					newGroupAbove.appendChild(component);
 					this.parentNode.insertBefore(newGroupAbove, this);
 					break;
+
 				case 0:
 					this.appendChild(component);
 					break;
+
 				case 1:
 					const newGroupBelow = this.cloneNode();
 					newGroupBelow.appendChild(component);
 					this.parentNode.insertBefore(newGroupBelow, this.nextSibling);
 					break;
+					
+				case 2:
+					const newRightColumn = this.parentNode.cloneNode();
+					newRightColumn.width = 500;
+					const newGroupRight = this.cloneNode();
+					newGroupRight.appendChild(component);
+					newRightColumn.appendChild(newGroupRight);
+					this.parentNode.parentNode.insertBefore(newRightColumn, this.parentNode.nextSibling);
+					break;
 			}
+
+			window.dispatchEvent(new Event('layout'));
 		}
 
 		this.addEventListener('dragover', dragOverHandler);
