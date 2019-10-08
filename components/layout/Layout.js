@@ -173,8 +173,15 @@ export default class Layout extends HTMLElement {
 		const columnTemplate = [];
 
 		for(let column of columns) {
-			const fraction = (column.width / availableWidth) * columns.length;
-			column.width = availableWidth * fraction;
+			let fraction = 1;
+
+			if(columns.length == 1) {
+				column.width = availableWidth;
+			} else {
+				fraction = (column.width / availableWidth) * columns.length;
+				column.width = availableWidth * fraction;
+			}
+
 			columnTemplate.push(fraction);
 		}
 
