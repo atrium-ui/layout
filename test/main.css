@@ -22,7 +22,7 @@ placeholder {
     justify-content: center;
     align-items: center;
     font-size: 42px;
-    font-weight: bold;
+    font-weight: 100;
     font-family: sans-serif;
     color: grey;
 }
@@ -33,5 +33,4 @@ gyro-layout {
     left: 0;
     right: 0;
     bottom: 0;
-    grid-template-columns: 1fr 2fr 1fr;
 }

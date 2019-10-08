@@ -260,6 +260,17 @@ export default class Group extends Column {
 				tab.ondragend = e => {
 					component.removeAttribute('drag-target');
 				}
+	
+				tab.ondblclick = e => {
+					const name = prompt('Twitch Name');
+
+					if(name) {
+						tab.innerHTML = name;
+						component.innerHTML = `
+							<iframe src="https://player.twitch.tv/?channel=${name}" frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>
+						`;
+					}
+				}
 
 				const replaceView = (nodeName, tabName) => {	
 					const newTab = document.createElement(nodeName);	
