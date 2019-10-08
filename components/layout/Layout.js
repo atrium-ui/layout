@@ -17,6 +17,18 @@ export default class Layout extends HTMLElement {
 	connectedCallback() {
 		this.layoutUpdate();
 		this.resizable();
+
+		// ignore components on drag
+		this.addEventListener('dragstart', () => {
+			this.setAttribute('drag-over', '');
+		})
+
+		const dragEndHandler = () => {
+			this.removeAttribute('drag-over', '');
+		};
+
+		this.addEventListener('dragend', dragEndHandler);
+		this.addEventListener('drop', dragEndHandler);
 	}
 
 	get childElements() {

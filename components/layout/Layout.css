@@ -2,7 +2,6 @@ gyro-layout {
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
-    /* margin: 3px; */
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
@@ -21,14 +20,26 @@ gyro-group {
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    /* border-radius: 4px; */
-    /* margin: 3px; */
     background: var(--gyro-dark-grey);
     color: #eee;
 }
 
+[drag-over] gyro-group > * {
+    pointer-events: none;
+}
+
+gyro-group > * {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
 gyro-group > [tab]:not([active]) {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: none;
     pointer-events: none;
 }
 

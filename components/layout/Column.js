@@ -17,6 +17,11 @@ export default class Column extends Layout {
 		this.update();
 	}
 
+	connectedCallback() {
+		this.layoutUpdate();
+		this.resizable();
+	}
+
 	update() {
 		this.boundingBox = this.getBoundingClientRect();
 
