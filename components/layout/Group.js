@@ -243,7 +243,7 @@ export default class Group extends Column {
 				const groupid = component.getAttribute("tab");
 
 				if(groupid) {
-					tab.innerText = groupid;
+					tab.innerText = component.name || groupid;
 					tab.dataset.groupid = groupid;
 				}
 	
