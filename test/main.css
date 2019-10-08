@@ -33,4 +33,5 @@ gyro-layout {
     left: 0;
     right: 0;
     bottom: 0;
+    grid-template-columns: 1fr 2fr 1fr;
 }

@@ -109,6 +109,10 @@ export default class Group extends Column {
 		this.renderTabs();
 	}
 
+	connectedCallback() {
+		
+	}
+
 	slotChangeCallback() {
 		if(this.components.length === 0) {
 			this.parentNode.removeChild(this);
@@ -162,6 +166,7 @@ export default class Group extends Column {
 
 		const dragEndHandler = e => {
 			this.removeAttribute('drag-over');
+			this.removeAttribute('style');
 		}
 
 		const dragDropHandler = e => {
@@ -299,13 +304,15 @@ export default class Group extends Column {
 		const tabs = this.tabs;
 		const components = this.components;
 
-		for (let i = 0; i < tabs.length; i++) {
+		for (let i = 0; i < components.length; i++) {
 			const tab = tabs[i];
 
-			if (i == index) {
-				tab.setAttribute("active", "");
-			} else {
-				tab.removeAttribute("active");
+			if(tab) {
+				if (i == index) {
+					tab.setAttribute("active", "");
+				} else {
+					tab.removeAttribute("active");
+				}
 			}
 
 			if (components[i]) {
