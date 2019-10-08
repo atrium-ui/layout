@@ -1,28 +1,26 @@
-import Group from './Group.js';
-import Column from './Column.js';
-
-class Layout extends HTMLElement {
+export default class Layout extends HTMLElement {
 
 	constructor() {
 		super();
 
 		this.attachShadow({ mode: 'open' });
-		this.shadowRoot.innerHTML = `<slot></slot>`;
+		const slot = document.createElement('slot');
+		this.shadowSlot = slot;
+		this.shadowRoot.appendChild(slot);
 
 		this.preventResizeEvent = false;
 		
 		window.addEventListener('resize', () => this.layoutUpdate());
 		window.addEventListener('layout', () => this.layoutUpdate());
-
-		this.resizable();
 	}
 
 	connectedCallback() {
 		this.layoutUpdate();
+		this.resizable();
 	}
 
-	get columns() {
-		return [...this.children].filter(ele => ele instanceof Column);
+	get childElements() {
+		return [...this.children].filter(ele => ele.boundingBox);
 	}
 
 	resizable() {
@@ -32,11 +30,11 @@ class Layout extends HTMLElement {
 		const borderSize = 4;
 
 		let pointerDownEvent = null;
-		let resizeAvailable = false;
+		let resizeAvailable = [0, 0];
 
 		const pointerMoveHandler = (e, index) => {
 
-			const columns = this.columns;
+			const columns = this.childElements;
 			const column = columns[index];
 			const neighbor = columns[index+1];
 			const columnBounds = column.boundingBox;
@@ -112,13 +110,16 @@ class Layout extends HTMLElement {
 					splitBar.style.height = borderSize + "px";
 					splitBar.style.width = columnBounds.width + "px";
 					splitBar.style.setProperty('--y', borderY);
-					splitBar.style.setProperty('--x', 0);
+					splitBar.style.setProperty('--x', columnBounds.width / 2 + 3);
 				}
 			}
 
 			// set resize state
 			if(!pointerDownEvent) {
-				resizeAvailable = resizable;
+				const prevented = !this.onResizeAvailableChange(resizable);
+				if(!prevented) {
+					resizeAvailable = resizable;
+				}
 			}
 
 			return resizeAvailable[0] || resizeAvailable[1];
@@ -145,7 +146,7 @@ class Layout extends HTMLElement {
 				pointerMoveHandler(e, activeChild);
 				e.preventDefault();
 			} else {
-				for(let c = 0; c < this.columns.length; c++) {
+				for(let c = 0; c < this.childElements.length; c++) {
 					if(pointerMoveHandler(e, c)) {
 						e.preventDefault();
 						activeChild = c;
@@ -160,11 +161,15 @@ class Layout extends HTMLElement {
 		window.addEventListener('pointercancel', cancelPointerHandler);
 	}
 
+	onResizeAvailableChange(resizeAvailable) {
+		return true;
+	}
+
 	layoutUpdate() {
 		if(this.preventResizeEvent) return;
 
 		const availableWidth = this.clientWidth;
-		const columns = this.columns;
+		const columns = this.childElements;
 		const columnTemplate = [];
 
 		for(let column of columns) {
@@ -173,7 +178,7 @@ class Layout extends HTMLElement {
 			columnTemplate.push(fraction);
 		}
 
-		this.style.gridTemplateColumns = columnTemplate.map(n => n.toFixed(4) + "fr").join(" ");
+		this.setLayoutTempalte(columnTemplate);
 
 		this.preventResizeEvent = true;
 
@@ -181,6 +186,10 @@ class Layout extends HTMLElement {
 		window.dispatchEvent(new Event('layout'));
 
 		this.preventResizeEvent = false;
+	}
+
+	setLayoutTempalte(columnTemplate) {
+		this.style.gridTemplateColumns = columnTemplate.map(n => n.toFixed(4) + "fr").join(" ");
 	}
 
 }

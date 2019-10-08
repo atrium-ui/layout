@@ -1,4 +1,6 @@
-export default class Group extends HTMLElement {
+import Column from './Column.js';
+
+export default class Group extends Column {
 
 	static get observedAttributes() {
 		return ['active-tab', 'show-tabs', 'fixed-tabs'];
@@ -91,16 +93,29 @@ export default class Group extends HTMLElement {
 	constructor() {
 		super();
 
-		this.attachShadow({ mode: "open" });
-
-		this.slotElement = document.createElement('slot');
-
 		this.shadowRoot.appendChild(this.constructor.template);
-		this.shadowRoot.appendChild(this.slotElement);
-
-		this.slotElement.addEventListener("slotchange", () => this.slotChangeCallback());
+		this.shadowRoot.appendChild(this.shadowSlot);
 
 		this.initializeDragAndDropHandlers();
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		if(oldValue === newValue) return;
+
+		if(name === 'active-tab') {
+			this.activeTab = newValue;
+		}
+
+		this.renderTabs();
+	}
+
+	slotChangeCallback() {
+		if(this.components.length === 0) {
+			this.parentNode.removeChild(this);
+			return;
+		}
+
+		this.renderTabs();
 	}
 
 	initializeDragAndDropHandlers() {
@@ -132,25 +147,6 @@ export default class Group extends HTMLElement {
 		this.addEventListener('dragleave', dragEndHandler);
 		this.addEventListener('dragend', dragEndHandler);
 		this.addEventListener('drop', dragDropHandler);
-	}
-
-	attributeChangedCallback(name, oldValue, newValue) {
-		if(oldValue === newValue) return;
-
-		if(name === 'active-tab') {
-			this.activeTab = newValue;
-		}
-
-		this.renderTabs();
-	}
-
-	slotChangeCallback() {
-		if(this.components.length === 0) {
-			this.parentNode.removeChild(this);
-			return;
-		}
-
-		this.renderTabs();
 	}
 
 	// updates tabs bar if components have changed
