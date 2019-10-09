@@ -219,8 +219,6 @@ export default class Group extends Column {
 					this.parentNode.parentNode.insertBefore(newRightColumn, this.parentNode.nextSibling);
 					break;
 			}
-
-			window.dispatchEvent(new Event('layout'));
 		}
 
 		this.addEventListener('dragover', dragOverHandler);

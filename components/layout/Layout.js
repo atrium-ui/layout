@@ -8,20 +8,36 @@ export default class Layout extends HTMLElement {
 		this.shadowSlot = slot;
 		this.shadowRoot.appendChild(slot);
 
-		this.preventResizeEvent = false;
-		
-		window.addEventListener('resize', () => this.layoutUpdate());
-		window.addEventListener('layout', () => this.layoutUpdate());
+		this.resizableRow = false;
+		this.resizableColumn = true;
+
+		this.shadowSlot.addEventListener("slotchange", e => {
+			this.slotChangeCallback();
+		});
+
+		this.updateBounds();
+	}
+
+	slotChangeCallback() {
+		this.layoutUpdate();
 	}
 
 	connectedCallback() {
-		this.layoutUpdate();
 		this.resizable();
+		this.disableOnDrag();
 
+		window.addEventListener('resize', () => this.layoutUpdate());
+	}
+
+	get childElements() {
+		return [...this.children].filter(ele => ele instanceof Layout);
+	}
+
+	disableOnDrag() {
 		// ignore components on drag
 		this.addEventListener('dragstart', () => {
 			this.setAttribute('drag-over', '');
-		})
+		});
 
 		const dragEndHandler = () => {
 			this.removeAttribute('drag-over', '');
@@ -29,10 +45,6 @@ export default class Layout extends HTMLElement {
 
 		this.addEventListener('dragend', dragEndHandler);
 		this.addEventListener('drop', dragEndHandler);
-	}
-
-	get childElements() {
-		return [...this.children].filter(ele => ele.boundingBox);
 	}
 
 	resizable() {
@@ -46,9 +58,9 @@ export default class Layout extends HTMLElement {
 
 		const pointerMoveHandler = (e, index) => {
 
-			const columns = this.childElements;
-			const column = columns[index];
-			const neighbor = columns[index+1];
+			const children = this.childElements;
+			const column = children[index];
+			const neighbor = children[index+1];
 			const columnBounds = column.boundingBox;
 
 			if(!neighbor) return;
@@ -64,26 +76,20 @@ export default class Layout extends HTMLElement {
 			];
 
 			const resizable = [
-				mouse[0] > columnBounds.right - borderSize && mouse[0] < columnBounds.right + borderSize,
-				mouse[1] > columnBounds.bottom - borderSize && mouse[1] < columnBounds.bottom + borderSize,
+				this.resizableColumn && mouse[0] > columnBounds.right - borderSize && mouse[0] < columnBounds.right + borderSize && mouse[1] < columnBounds.bottom && mouse[1] > columnBounds.top,
+				this.resizableRow && mouse[1] > columnBounds.bottom - borderSize && mouse[1] < columnBounds.bottom + borderSize && mouse[0] < columnBounds.right && mouse[0] > columnBounds.left,
 			];
 
 			const resizeX = resizable[0] || resizeAvailable[0];
 			const resizeY = resizable[1] || resizeAvailable[1];
 
 			if(pointerDownEvent) {
-
 				if (resizeX) {
-					column.width += delta[0];
-					neighbor.width -= delta[0];
+					this.onResize([delta[0], 0], column, neighbor);
 				}
-
 				if (resizeY) {
-					column.height += delta[1];
-					neighbor.height -= delta[1];
+					this.onResize([0, delta[1]], column, neighbor);
 				}
-
-				this.layoutUpdate();
 			}
 	
 			// update splitbar
@@ -97,10 +103,8 @@ export default class Layout extends HTMLElement {
 					splitBar.parentNode.removeChild(splitBar);
 				}
 				
-				const layoutBounds = this.getBoundingClientRect();
-
-				let borderX = columnBounds.x - (layoutBounds.x) + columnBounds.width;
-				let borderY = columnBounds.y - (layoutBounds.y) + columnBounds.height;
+				let borderX = columnBounds.x - this.boundingBox.x + columnBounds.width;
+				let borderY = columnBounds.y - this.boundingBox.y + columnBounds.height;
 
 				if(pointerDownEvent) {
 					borderX += delta[0];
@@ -112,17 +116,17 @@ export default class Layout extends HTMLElement {
 				}
 
 				if(resizeX) {
-					splitBar.style.width = borderSize + "px";
-					splitBar.style.height = columnBounds.height + "px";
+					splitBar.className = "split-bar vertical";
+					splitBar.style.setProperty('--size', borderSize);
 					splitBar.style.setProperty('--x', borderX);
 					splitBar.style.setProperty('--y', 0);
 				}
 
 				if(resizeY) {
-					splitBar.style.height = borderSize + "px";
-					splitBar.style.width = columnBounds.width + "px";
+					splitBar.className = "split-bar horizontal";
+					splitBar.style.setProperty('--size', borderSize);
 					splitBar.style.setProperty('--y', borderY);
-					splitBar.style.setProperty('--x', columnBounds.width / 2 + 3);
+					splitBar.style.setProperty('--x', 0);
 				}
 			}
 
@@ -138,10 +142,8 @@ export default class Layout extends HTMLElement {
 		};
 
 		const cancelPointerHandler = e => {
-			if(pointerDownEvent) {
-				window.dispatchEvent(new Event('layout'));
-			}
 			pointerDownEvent = null;
+			splitBar.removeAttribute('active');
 		};
 
 		const pointerDownHandler = e => {
@@ -177,38 +179,81 @@ export default class Layout extends HTMLElement {
 		return true;
 	}
 
-	layoutUpdate() {
-		if(this.preventResizeEvent) return;
+	onResize(delta, column, neighbor) {
 
-		const availableWidth = this.clientWidth;
-		const columns = this.childElements;
-		const columnTemplate = [];
+		column.width += delta[0];
+		neighbor.width -= delta[0];
 
-		for(let column of columns) {
-			let fraction = 1;
-
-			if(columns.length == 1) {
-				column.width = availableWidth;
-			} else {
-				fraction = (column.width / availableWidth) * columns.length;
-				column.width = availableWidth * fraction;
-			}
-
-			columnTemplate.push(fraction);
-		}
-
-		this.setLayoutTempalte(columnTemplate);
-
-		this.preventResizeEvent = true;
-
-		window.dispatchEvent(new Event('resize'));
-		window.dispatchEvent(new Event('layout'));
-
-		this.preventResizeEvent = false;
+		column.height += delta[1];
+		neighbor.height -= delta[1];
+		
+		this.layoutUpdate();
 	}
 
-	setLayoutTempalte(columnTemplate) {
-		this.style.gridTemplateColumns = columnTemplate.map(n => n.toFixed(4) + "fr").join(" ");
+	layoutUpdate() {
+		const availableWidth = this.clientWidth;
+		const availableHeight = this.clientHeight;
+
+		const children = this.childElements;
+
+		const columnTemplate = [];
+		const rowTemplate = [];
+
+		for(let child of children) {
+
+			// column
+			if(this.resizableColumn) {
+				let columnFraction = 1;
+
+				if(children.length == 1) {
+					child.width = availableWidth;
+				} else {
+					columnFraction = (child.width / availableWidth) * children.length;
+					child.width = availableWidth * columnFraction;
+				}
+
+				columnTemplate.push(columnFraction);
+			}
+
+			// row
+			if(this.resizableRow) {
+				let rowFraction = 1;
+
+				if(children.length == 1) {
+					child.height = availableHeight;
+				} else {
+					rowFraction = (child.height / availableHeight) * children.length;
+					child.height = availableHeight * rowFraction;
+				}
+
+				rowTemplate.push(rowFraction);
+			}
+		}
+
+		this.setLayoutTempalte(columnTemplate, rowTemplate);
+
+		for(let child of children) {
+			child.layoutUpdate();
+		}
+		
+		this.updateBounds();
+
+		window.dispatchEvent(new Event('layout'));
+	}
+
+	updateBounds() {
+		this.width = this.clientWidth;
+		this.height = this.clientHeight;
+		this.boundingBox = this.getBoundingClientRect();
+	}
+
+	setLayoutTempalte(columnTemplate, rowTemplate) {
+		if(this.resizableColumn) {
+			this.style.gridTemplateColumns = columnTemplate.map(n => n.toFixed(4) + "fr").join(" ");
+		}
+		if(this.resizableRow) {
+			this.style.gridTemplateRows = rowTemplate.map(n => n.toFixed(4) + "fr").join(" ");
+		}
 	}
 
 }
