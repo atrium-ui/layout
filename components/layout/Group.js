@@ -256,7 +256,9 @@ export default class Group extends Column {
 				}
 	
 				tab.ondragend = e => {
-					component.removeAttribute('drag-target');
+					setTimeout(() => {
+						component.removeAttribute('drag-target');
+					}, 10);
 				}
 	
 				tab.ondblclick = e => {
