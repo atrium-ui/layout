@@ -14,8 +14,6 @@ export default class Layout extends HTMLElement {
 		this.shadowSlot.addEventListener("slotchange", e => {
 			this.slotChangeCallback();
 		});
-
-		this.updateBounds();
 	}
 
 	slotChangeCallback() {
