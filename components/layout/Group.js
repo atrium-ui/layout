@@ -196,6 +196,8 @@ export default class Group extends Column {
 				case -1:
 					const newGroupAbove = this.cloneNode();
 					newGroupAbove.appendChild(component);
+					newGroupAbove.height = 400;
+					this.height -= 400;
 					this.parentNode.insertBefore(newGroupAbove, this);
 					break;
 
@@ -206,6 +208,8 @@ export default class Group extends Column {
 				case 1:
 					const newGroupBelow = this.cloneNode();
 					newGroupBelow.appendChild(component);
+					newGroupBelow.height = 400;
+					this.height -= 400;
 					this.parentNode.insertBefore(newGroupBelow, this.nextSibling);
 					break;
 					

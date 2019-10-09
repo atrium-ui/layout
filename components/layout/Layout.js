@@ -1,11 +1,64 @@
 export default class Layout extends HTMLElement {
 
+	static get layoutStyles() {
+		return `
+			<style>
+				.split-bar {
+					--size: 0;
+					--x: 0;
+					--y: 0;
+
+					z-index: 100000;
+					position: absolute;
+					left: calc(var(--x, 0) * 1px);
+					top: calc(var(--y, 0) * 1px);
+					opacity: 0.25;
+					border-radius: 5px;
+					background: rgba(255, 255, 255, 0.2);
+				}
+				.split-bar[active] {
+					background: var(--gyro-accent-color);
+				}
+				.split-bar.vertical {
+					height: 100%;
+					width: calc(var(--size) * 1px);
+					margin-left: 1px;
+				}
+				.split-bar.horizontal {
+					width: 100%;
+					height: calc(var(--size) * 1px);
+					margin-top: 1px;
+				}
+				.split-bar::after {
+					content: "";
+					z-index: 10000;
+					position: absolute;
+					top: 0;
+					left: 0;
+				}
+				.split-bar.vertical::after {
+					width: 200px;
+					height: 100%;
+					transform: translate(-50%, 0);
+					cursor: w-resize;
+				}
+				.split-bar.horizontal::after {
+					height: 200px;
+					width: 100%;
+					transform: translate(0, -50%);
+					cursor: n-resize;
+				}
+			</style>
+		`;
+	}
+
 	constructor() {
 		super();
 
 		this.attachShadow({ mode: 'open' });
 		const slot = document.createElement('slot');
 		this.shadowSlot = slot;
+		this.shadowRoot.innerHTML = this.constructor.layoutStyles;
 		this.shadowRoot.appendChild(slot);
 
 		this.resizableRow = false;
@@ -93,12 +146,12 @@ export default class Layout extends HTMLElement {
 			// update splitbar
 
 			if(resizeX || resizeY && !splitBar.parentNode) {
-				this.appendChild(splitBar);
+				this.shadowRoot.appendChild(splitBar);
 			}
 
 			if(splitBar.parentNode) {
 				if(!pointerDownEvent && !resizeX && !resizeY) {
-					splitBar.parentNode.removeChild(splitBar);
+					splitBar.remove();
 				}
 				
 				let borderX = columnBounds.x - this.boundingBox.x + columnBounds.width;
@@ -140,6 +193,10 @@ export default class Layout extends HTMLElement {
 		};
 
 		const cancelPointerHandler = e => {
+			if(pointerDownEvent) {
+				this.onLayoutChange();
+			}
+
 			pointerDownEvent = null;
 			splitBar.removeAttribute('active');
 		};
@@ -175,6 +232,10 @@ export default class Layout extends HTMLElement {
 
 	onResizeAvailableChange(resizeAvailable) {
 		return true;
+	}
+
+	onLayoutChange() {
+		window.dispatchEvent(new Event('resize'));
 	}
 
 	onResize(delta, column, neighbor) {
