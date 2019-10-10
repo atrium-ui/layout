@@ -177,7 +177,14 @@ export default class Group extends Column {
 			dragEndHandler();
 
 			const targetId = e.dataTransfer.getData("tab");
+
+			if(!targetId)
+				return;
+
 			const component = document.querySelector('['+targetId+']');
+
+			if(!component)
+				return;
 
 			if(insertPosition === 0 && component.parentNode === this) 
 				return;
