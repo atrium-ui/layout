@@ -10,7 +10,52 @@
     <link rel="stylesheet" href="../components/layout/Layout.css"/>
     <script type="module" src="../components/layout/Group.js"></script>
 
-    <link rel="stylesheet" href="./main.css"/>
+    <style>
+        
+        :root {
+            --gyro-background: hsla(220, 6%, 8%, 1);
+            --gyro-darker-grey: hsla(220, 6%, 9.5%, 1);
+            --gyro-dark-grey: hsla(220, 6%, 11%, 1);
+            --gyro-grey: hsla(220, 6%, 14%, 1);
+            --gyro-accent-color: #1991e6;
+        }
+
+        body {
+            background: var(--gyro-background);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        placeholder {
+            display: block;
+            background: var(--gyro-dark-grey);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            font-weight: 100;
+            font-family: sans-serif;
+            color: grey;
+        }
+
+        gyro-layout {
+            grid-template-columns: 1fr 2fr 1fr;
+            margin: 6px;
+            flex: 1;
+        }
+
+        gyro-layout,
+        gyro-layout-column {
+            grid-gap: 6px;
+        }
+
+    </style>
 </head>
 
 <body>
