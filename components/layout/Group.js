@@ -12,7 +12,7 @@ export default class Group extends Column {
 			<style>
 				.tabs {
 					display: flex;
-					background: var(--gyro-darker-grey);
+					background: var(--gyro-grey);
 					font-family: sans-serif;
 					color: #b5b5b5;
 					font-size: 12px;
@@ -25,7 +25,7 @@ export default class Group extends Column {
 					display: inline-flex;
 					align-items: center;
 					padding: 2px 14px;
-					background: var(--gyro-grey);
+					background: var(--gyro-highlight-grey);
 					margin: 0 1px 0 0;
 					height: 20px;
 					cursor: pointer;
