@@ -265,6 +265,8 @@ export default class Group extends Column {
 						component.removeAttribute('drag-target');
 					}, 10);
 				}
+
+				// TODO: make the tab into a sepeare component
 	
 				tab.ondblclick = e => {
 					const name = prompt('Twitch Name');
