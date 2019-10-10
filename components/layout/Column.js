@@ -1,6 +1,6 @@
-import Layout from './Layout.js';
+import Panel from './Panel.js';
 
-export default class Column extends Layout {
+export default class Column extends Panel {
 
 	constructor() {
 		super();
