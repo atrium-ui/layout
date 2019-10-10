@@ -62,6 +62,7 @@ export default class Group extends Column {
 
 				.add-tab {
 					font-size: 14px;
+					--icon-size: 10px;
 				}
 			</style>
 			<div class="tabs"></div>
@@ -315,7 +316,7 @@ export default class Group extends Column {
 		// append pseudo "+" tab
 		if(!this.hasAttribute('fixed-tabs') && this.tabs.length > 0) {
 			const addTab = createTab();
-			addTab.innerText = '+';
+			addTab.innerHTML = '<gyro-icon icon="Add">+</gyro-icon>';
 			addTab.classList.add('add-tab');
 			addTab.addEventListener('click', () => {
 				const cloned = components[components.length-1];
