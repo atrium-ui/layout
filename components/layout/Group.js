@@ -78,7 +78,6 @@ export default class Group extends Column {
 	}
 
 	set activeTab(index) {
-		this.setAttribute("active-tab", index);
 		this.setActiveTab(index);
 	}
 
@@ -110,16 +109,18 @@ export default class Group extends Column {
 	}
 
 	connectedCallback() {
-		
+		// override default
 	}
 
-	slotChangeCallback() {
+	slotChangeCallback(e) {
 		if(this.components.length === 0) {
 			this.parentNode.removeChild(this);
 			return;
 		}
 
 		this.renderTabs();
+
+		this.setActiveTab(this.components.length-1);
 	}
 
 	initializeDragAndDropHandlers() {
@@ -269,7 +270,9 @@ export default class Group extends Column {
 					const name = prompt('Twitch Name');
 
 					if(name) {
-						tab.innerHTML = name;
+						tab.innerText = name;
+						tab.dataset.groupid = name;
+						component.setAttribute('tab', name);
 						component.innerHTML = `
 							<iframe src="https://player.twitch.tv/?channel=${name}" frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>
 						`;
@@ -329,8 +332,6 @@ export default class Group extends Column {
 		if(this.activeTab > this.tabs.length-1) {
 			this.activeTab = Math.max(this.tabs.length-1, 0);
 		}
-
-		this.setActiveTab(this.activeTab);
 	}
 
 	// updates components and tab bar if active tab changed

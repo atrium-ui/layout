@@ -17,7 +17,8 @@ export default class Column extends Layout {
 		if(this.children.length === 0) {
 			this.remove();
 		}
-		this.layoutUpdate();
+		
+		super.slotChangeCallback();
 	}
 
 }
