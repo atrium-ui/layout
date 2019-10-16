@@ -30,10 +30,14 @@ gyro-group {
 
 gyro-group > * {
     position: absolute;
-    top: 24px;
+    top: 0;
     left: 0;
     bottom: 0;
     right: 0;
+}
+
+gyro-group[show-tabs] > * {
+    top: 24px;
 }
 
 gyro-group > [tab]:not([active]) {
