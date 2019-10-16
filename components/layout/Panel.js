@@ -93,8 +93,10 @@ export default class Panel extends HTMLElement {
 
 	disableOnDrag() {
 		// ignore components on drag
-		this.addEventListener('dragstart', () => {
-			this.setAttribute('drag-over', '');
+		this.addEventListener('dragstart', e => {
+			if(e.dataTransfer.getData('tab')) {
+				this.setAttribute('drag-over', '');
+			}
 		});
 
 		const dragEndHandler = () => {
