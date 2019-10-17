@@ -295,7 +295,7 @@ export default class Group extends Column {
 					this.replaceChild(newTab, component);	
 				}
 
-				tab.contextMenu = {	
+				tab.gyroContextMenu = {	
 					'viewer': () => replaceView('gyro-image-editor', 'imageviewer.title'),	
 					'3D view': () => replaceView('gyro-viewport', 'viewport.title'),	
 					'properties': () => replaceView('gyro-propperties', 'propperties.title'),	
