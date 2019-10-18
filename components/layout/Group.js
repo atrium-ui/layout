@@ -52,12 +52,12 @@ export default class Group extends Column {
 				
 				.tab:hover::before {
 					color: white;
-					background: rgba(255, 255, 255, 0.1);
+					background: var(--tab-hover-background);
 				}
 				
 				.tab[active]::before,
 				.tab:active::before {
-					background: rgba(255, 255, 255, 0.05);
+					background: var(--tab-active-background);
 				}
 
 				.add-tab {

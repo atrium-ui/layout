@@ -7,6 +7,8 @@ gyro-layout {
     grid-auto-columns: 1fr;
 
     --tab-background: var(--gyro-dark-grey);
+    --tab-active-background: rgba(255, 255, 255, 0.02);
+    --tab-hover-background: rgba(255, 255, 255, 0.05);
     --tabs-background: var(--gyro-dark-grey);
 }
 
