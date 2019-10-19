@@ -26,7 +26,7 @@ gyro-group {
     display: flex;
     flex-direction: column;
     background: var(--gyro-level2-bg);
-    color: #eee;
+    color: var(--gyro-font-color);
 }
 
 [drag-over] gyro-group > * {
