@@ -6,10 +6,10 @@ gyro-layout {
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
 
-    --tab-background: var(--gyro-dark-grey);
+    --tab-background: var(--gyro-level2-bg);
     --tab-active-background: rgba(255, 255, 255, 0.02);
     --tab-hover-background: rgba(255, 255, 255, 0.05);
-    --tabs-background: var(--gyro-dark-grey);
+    --tabs-background: var(--gyro-level2-bg);
 }
 
 gyro-layout-column {
@@ -25,7 +25,7 @@ gyro-group {
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    background: var(--gyro-dark-grey);
+    background: var(--gyro-level2-bg);
     color: #eee;
 }
 
