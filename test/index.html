@@ -11,17 +11,9 @@
     <script type="module" src="../components/layout/Layout.js"></script>
 
     <style>
-        
-        :root {
-            --gyro-background: hsla(220, 6%, 8%, 1);
-            --gyro-level1-bg: hsla(220, 6%, 9.5%, 1);
-            --gyro-level2-bg: hsla(220, 6%, 11%, 1);
-            --gyro-level3-bg: hsla(220, 6%, 14%, 1);
-            --gyro-accent-color: #1991e6;
-        }
 
         body {
-            background: var(--gyro-background);
+            background: hsla(0, 0%, 8%, 1);
             position: absolute;
             top: 0;
             left: 0;
@@ -34,7 +26,6 @@
 
         placeholder {
             display: block;
-            background: var(--gyro-level2-bg);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -45,14 +36,8 @@
         }
 
         gyro-layout {
-            grid-template-columns: 1fr 2fr 1fr;
-            margin: 6px;
+            grid-template-columns: 1fr 2fr;
             flex: 1;
-        }
-
-        gyro-layout,
-        gyro-layout-column {
-            grid-gap: 6px;
         }
 
     </style>
@@ -67,25 +52,15 @@
             </gyro-group>
             <gyro-group show-tabs>
                 <placeholder tab="Start">2</placeholder>
+            </gyro-group>
+        </gyro-layout-column>
+
+        <gyro-layout-column>
+            <gyro-group show-tabs>
                 <placeholder tab="Start">3</placeholder>
             </gyro-group>
-        </gyro-layout-column>
-
-        <gyro-layout-column>
             <gyro-group show-tabs>
                 <placeholder tab="Start">4</placeholder>
-            </gyro-group>
-            <gyro-group show-tabs>
-                <placeholder tab="Start">5</placeholder>
-            </gyro-group>
-        </gyro-layout-column>
-
-        <gyro-layout-column>
-            <gyro-group show-tabs>
-                <placeholder tab="Start">6</placeholder>
-            </gyro-group>
-            <gyro-group show-tabs>
-                <placeholder tab="Start">7</placeholder>
             </gyro-group>
         </gyro-layout-column>
 

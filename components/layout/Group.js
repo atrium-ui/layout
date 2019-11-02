@@ -274,8 +274,6 @@ export default class Group extends Column {
 					}, 10);
 				}
 
-				// TODO: make the tab into a sepeare component
-	
 				tab.ondblclick = e => {
 					const name = prompt('Twitch Name');
 
@@ -289,22 +287,10 @@ export default class Group extends Column {
 					}
 				}
 
-				const replaceView = (nodeName, tabName) => {	
-					const newTab = document.createElement(nodeName);	
-					newTab.setAttribute('tab', tabName);	
-					this.replaceChild(newTab, component);	
-				}
-
-				tab.gyroContextMenu = {	
-					'viewer': () => replaceView('gyro-image-editor', 'imageviewer.title'),	
-					'3D view': () => replaceView('gyro-viewport', 'viewport.title'),	
-					'properties': () => replaceView('gyro-propperties', 'propperties.title'),	
-					'assets': () => replaceView('gyro-assets', 'assets.title'),	
-					'console': () => replaceView('gyro-console', 'console.title'),	
-					'node editor': () => replaceView('gyro-editor', 'editor.title'),	
-					'close': () => {	
-						this.removeChild(component);
-					},	
+				tab.onmousedown = e => {
+					if(e.which === 2) {
+						component.remove();
+					}
 				}
 			}
 

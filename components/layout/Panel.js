@@ -13,11 +13,10 @@ export default class Panel extends HTMLElement {
 					left: calc(var(--x, 0) * 1px);
 					top: calc(var(--y, 0) * 1px);
 					opacity: 0.25;
-					border-radius: 5px;
 					background: rgba(255, 255, 255, 0.2);
 				}
 				.split-bar[active] {
-					background: var(--gyro-accent-color);
+					background: var(--split-bar-color);
 				}
 				.split-bar.vertical {
 					height: 100%;
@@ -110,8 +109,9 @@ export default class Panel extends HTMLElement {
 	resizable() {
 		const splitBar = document.createElement('div');
 		splitBar.className = "split-bar";
-		
-		const borderSize = 3;
+
+		const borderSizeVar = getComputedStyle(this).getPropertyValue('--layout-grid-gap');
+		const borderSize = parseInt(borderSizeVar);
 
 		let pointerDownEvent = null;
 		let resizeAvailable = [0, 0];
@@ -134,8 +134,8 @@ export default class Panel extends HTMLElement {
 			const column = children[index];
 			const columnBounds = column.boundingBox;
 
-			const borderX = columnBounds.left + this.width * (this.columns[index] / children.length) + borderSize;
-			const borderY = columnBounds.top + this.height * (this.rows[index] / children.length) + borderSize;
+			const borderX = columnBounds.left + this.width * (this.columns[index] / children.length) + (borderSize/2);
+			const borderY = columnBounds.top + this.height * (this.rows[index] / children.length) + (borderSize/2);
 
 			const minElementFraction = 0.05;
 
