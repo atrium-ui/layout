@@ -275,15 +275,14 @@ export default class Group extends Column {
 				}
 
 				tab.ondblclick = e => {
-					const name = prompt('Twitch Name');
+					const url = prompt('URL');
+					const name = url.split("/")[url.split("/").length - 1];
 
 					if(name) {
 						tab.innerText = name;
 						tab.dataset.groupid = name;
 						component.setAttribute('tab', name);
-						component.innerHTML = `
-							<iframe src="https://player.twitch.tv/?channel=${name}" frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>
-						`;
+						component.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>`;
 					}
 				}
 
