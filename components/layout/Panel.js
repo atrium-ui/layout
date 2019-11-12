@@ -3,6 +3,10 @@ export default class Panel extends HTMLElement {
 	static get layoutStyles() {
 		return `
 			<style>
+				:host {
+					--layout-grid-gap: 4px;
+				}
+
 				.split-bar {
 					--size: 0;
 					--x: 0;
