@@ -129,6 +129,8 @@ export default class Group extends Column {
 		let insertPosition = 0;
 
 		const dragOverHandler = e => {
+			if(!document.body.hasAttribute('layout-drag')) return;
+
 			e.preventDefault();
 
 			const bounds = this.getBoundingClientRect();
@@ -136,7 +138,7 @@ export default class Group extends Column {
 			const x = e.x;
 			const y = e.y;
 
-			const area = bounds.height / 8;
+			const area = Math.min(bounds.height / 8, bounds.width / 8);
 			
 			this.removeAttribute('style');
 			insertPosition = 0;
@@ -167,6 +169,14 @@ export default class Group extends Column {
 		}
 
 		const dragEndHandler = e => {
+			dragLeaveHandler(e);
+			
+			if(document.body.hasAttribute('layout-drag')) {
+				document.body.removeAttribute('layout-drag');
+			}
+		}
+
+		const dragLeaveHandler = e => {
 			this.removeAttribute('drag-over');
 			this.removeAttribute('style');
 		}
@@ -235,7 +245,7 @@ export default class Group extends Column {
 		}
 
 		this.addEventListener('dragover', dragOverHandler);
-		this.addEventListener('dragleave', dragEndHandler);
+		this.addEventListener('dragleave', dragLeaveHandler);
 		this.addEventListener('dragend', dragEndHandler);
 		this.addEventListener('drop', dragDropHandler);
 	}
@@ -264,6 +274,7 @@ export default class Group extends Column {
 				}
 	
 				tab.ondragstart = e => {
+					document.body.setAttribute('layout-drag', '');
 					e.dataTransfer.setData("tab", 'drag-target');
 					component.setAttribute('drag-target', '');
 				}
