@@ -19,6 +19,7 @@ export default class Group extends Column {
 					z-index: 1000;
 					pointer-events: all;
 					user-select: none;
+					border-bottom: 1px solid #191919;
 				}
 				
 				.tab {
