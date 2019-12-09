@@ -49,7 +49,7 @@ gyro-group > * {
 }
 
 gyro-group[show-tabs] > * {
-    top: 24px;
+    top: 27px;
 }
 
 gyro-group > [tab]:not([active]) {

@@ -19,13 +19,13 @@ export default class Group extends Column {
 					z-index: 1000;
 					pointer-events: all;
 					user-select: none;
-					border-bottom: 1px solid #191919;
+					border-bottom: 1px solid var(--gyro-background);
 				}
 				
 				.tab {
 					display: inline-flex;
 					align-items: center;
-					padding: 2px 14px;
+					padding: 3px 17px;
 					background: var(--tab-background);
 					margin: 0 1px 0 0;
 					height: 20px;
@@ -38,7 +38,7 @@ export default class Group extends Column {
 				}
 				
 				.tab[active] {
-					color: white;
+					color: var(--tab-font-color);
 				}
 				
 				.tab::before {
@@ -52,7 +52,7 @@ export default class Group extends Column {
 				}
 				
 				.tab:hover::before {
-					color: white;
+					color: var(--tab-font-color);
 					background: var(--tab-hover-background);
 				}
 				
