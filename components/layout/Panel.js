@@ -17,7 +17,7 @@ export default class Panel extends HTMLElement {
 					left: calc(var(--x, 0) * 1px);
 					top: calc(var(--y, 0) * 1px);
 					opacity: 0.25;
-					background: rgba(255, 255, 255, 0.2);
+					background: var(--split-bar-color-hover);
 				}
 				.split-bar[active] {
 					background: var(--split-bar-color);
@@ -43,13 +43,13 @@ export default class Panel extends HTMLElement {
 					width: 200px;
 					height: 100%;
 					transform: translate(-50%, 0);
-					cursor: w-resize;
+					cursor: col-resize;
 				}
 				.split-bar.horizontal::after {
 					height: 200px;
 					width: 100%;
 					transform: translate(0, -50%);
-					cursor: n-resize;
+					cursor: row-resize;
 				}
 			</style>
 		`;

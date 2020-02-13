@@ -6,6 +6,7 @@ gyro-layout {
     --tab-hover-background: rgba(200, 200, 200, 0.1);
     --tabs-background: hsla(0, 0%, 33%, 0.08);
     --split-bar-color: white;
+    --split-bar-color-hover: rgba(255, 255, 255, 0.2);
     --tab-font-color: #eee;
 
     box-sizing: border-box;
