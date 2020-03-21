@@ -25,12 +25,13 @@ export default class Group extends Column {
 				.tab {
 					display: inline-flex;
 					align-items: center;
-					padding: 3px 17px;
+					justify-content: center;
 					background: var(--tab-background);
 					margin: 0 1px 0 0;
-					height: 20px;
+					height: 30px;
 					cursor: pointer;
 					position: relative;
+					min-width: 80px;
 				}
 
 				.tab[data-groupid] {
@@ -51,19 +52,31 @@ export default class Group extends Column {
 					height: 100%;
 				}
 				
-				.tab:hover::before {
+				.tab:hover {
 					color: var(--tab-font-color);
 					background: var(--tab-hover-background);
 				}
+
+				.tab:active {
+					background: var(--tab-background);
+				}
 				
-				.tab[active]::before,
-				.tab:active::before {
+				.tab[active] {
 					background: var(--tab-active-background);
 				}
 
 				.add-tab {
 					font-size: 14px;
 					--icon-size: 10px;
+				}
+
+				slot {
+					display: block;
+					position: absolute;
+					top: 30px;
+					left: 0;
+					bottom: 0;
+					right: 0;
 				}
 			</style>
 			<div class="tabs"></div>

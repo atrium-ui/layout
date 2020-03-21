@@ -1,22 +1,18 @@
 gyro-layout {
-    --layout-grid-gap: 4px;
-    --panel-background: hsla(220, 0%, 12%, 1);
-    --tab-background: hsla(0, 0%, 50%, 0.1);
-    --tab-active-background: rgba(200, 200, 200, 0.05);
-    --tab-hover-background: rgba(200, 200, 200, 0.1);
-    --tabs-background: hsla(0, 0%, 33%, 0.08);
+    --panel-background: #272727;
+    --tab-background: #212121;
+    --tab-active-background: #272727;
+    --tab-hover-background: #333333;
+    --tabs-background: #212121;
+    --tab-font-color: #eeeeee;
     --split-bar-color: white;
     --split-bar-color-hover: rgba(255, 255, 255, 0.2);
-    --tab-font-color: #eee;
+    --layout-grid-gap: 3px;
 
-    box-sizing: border-box;
     position: relative;
     overflow: hidden;
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
     grid-gap: var(--layout-grid-gap);
-    margin: var(--layout-grid-gap);
 }
 
 gyro-layout-column {
@@ -47,10 +43,6 @@ gyro-group > * {
     left: 0;
     bottom: 0;
     right: 0;
-}
-
-gyro-group[show-tabs] > * {
-    top: 27px;
 }
 
 gyro-group > [tab]:not([active]) {
