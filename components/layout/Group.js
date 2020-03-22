@@ -312,9 +312,9 @@ export default class Group extends Column {
 				}
 
 				tab.onmousedown = e => {
-					if(e.which === 2) {
-						component.remove();
-					}
+					// if(e.which === 2) {
+					// 	component.remove();
+					// }
 				}
 			}
 
