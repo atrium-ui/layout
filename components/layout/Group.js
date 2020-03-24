@@ -245,46 +245,55 @@ export default class Group extends Column {
 
 			component.parentNode.removeChild(component);
 
-			switch(insertPosition) {
-				case -2:
-					const newLeftColumn = this.parentNode.cloneNode();
-					this.parentNode.width -= 500;
-					newLeftColumn.width = 500;
-					const newGroupLeft = this.cloneNode();
-					newGroupLeft.appendChild(component);
-					newLeftColumn.appendChild(newGroupLeft);
-					this.parentNode.parentNode.insertBefore(newLeftColumn, this.parentNode);
-					break;
+			// apend inside
+			if(insertPosition === 0) {
+				this.appendChild(component);
+			}
 
-				case -1:
-					const newGroupAbove = this.cloneNode();
-					newGroupAbove.appendChild(component);
-					newGroupAbove.height = 400;
-					this.height -= 400;
-					this.parentNode.insertBefore(newGroupAbove, this);
-					break;
+			// vertical
+			if(Math.abs(insertPosition) === 1) {
+				const oldHeight = this.height;
+				const newGroup = this.cloneNode();
 
-				case 0:
-					this.appendChild(component);
-					break;
+				newGroup.appendChild(component);
 
-				case 1:
-					const newGroupBelow = this.cloneNode();
-					newGroupBelow.appendChild(component);
-					newGroupBelow.height = 400;
-					this.height -= 400;
-					this.parentNode.insertBefore(newGroupBelow, this.nextSibling);
-					break;
-					
-				case 2:
-					const newRightColumn = this.parentNode.cloneNode();
-					this.parentNode.width -= 500;
-					newRightColumn.width = 500;
-					const newGroupRight = this.cloneNode();
-					newGroupRight.appendChild(component);
-					newRightColumn.appendChild(newGroupRight);
-					this.parentNode.parentNode.insertBefore(newRightColumn, this.parentNode.nextSibling);
-					break;
+				// apend above
+				if(insertPosition < 0) {
+					newGroup.height = oldHeight / 2;
+					this.height -= oldHeight / 2;
+					this.parentNode.insertBefore(newGroup, this);
+				}
+	
+				// apend below
+				if(insertPosition > 0) {
+					newGroup.height = oldHeight / 2;
+					this.height -= oldHeight / 2;
+					this.parentNode.insertBefore(newGroup, this.nextSibling);
+				}
+			}
+
+			// horizontal
+			if(Math.abs(insertPosition) === 2) {
+				const oldWidth = this.parentNode.width;
+				const newColumn = this.parentNode.cloneNode();
+				const newGroup = this.cloneNode();
+
+				newGroup.appendChild(component);
+				newColumn.appendChild(newGroup);
+
+				// apend to the left
+				if(insertPosition < 0) {
+					this.parentNode.width -= oldWidth / 2;
+					newColumn.width = oldWidth / 2;
+					this.parentNode.parentNode.insertBefore(newColumn, this.parentNode);
+				}
+
+				// apend to the right
+				if(insertPosition > 0) {
+					this.parentNode.width -= oldWidth / 2;
+					newColumn.width = oldWidth / 2;
+					this.parentNode.parentNode.insertBefore(newColumn, this.parentNode.nextSibling);
+				}
 			}
 		}
 
