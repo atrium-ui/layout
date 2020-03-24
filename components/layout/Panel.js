@@ -4,7 +4,20 @@ export default class Panel extends HTMLElement {
 		return `
 			<style>
 				:host {
-					--layout-grid-gap: 4px;
+					--panel-background: #272727;
+					--tab-background: #212121;
+					--tab-active-background: #272727;
+					--tab-hover-background: #333333;
+					--tabs-background: #212121;
+					--tab-font-color: #eeeeee;
+					--split-bar-color: white;
+					--split-bar-color-hover: rgba(255, 255, 255, 0.2);
+					--layout-grid-gap: 3px;
+
+					position: relative;
+					overflow: hidden;
+					display: grid;
+					grid-gap: var(--layout-grid-gap);
 				}
 
 				.split-bar {
@@ -55,6 +68,10 @@ export default class Panel extends HTMLElement {
 		`;
 	}
 
+	get childElements() {
+		return [...this.children].filter(ele => ele instanceof this.constructor);
+	}
+
 	constructor() {
 		super();
 
@@ -71,10 +88,12 @@ export default class Panel extends HTMLElement {
 
 		this.resizableRow = false;
 		this.resizableColumn = true;
+		this.removeOnEmtpy = false;
 
 		this.boundsInvalid = true;
 
 		slot.addEventListener("slotchange", e => this.slotChangeCallback(e));
+
 		window.addEventListener('resize', () => {
 			this.boundsInvalid = true;
 		});
@@ -82,20 +101,8 @@ export default class Panel extends HTMLElement {
 
 	connectedCallback() {
 		this.resizable();
-		this.disableOnDrag();
-	}
-
-	slotChangeCallback() {
-		this.layoutUpdate();
-		this.onLayoutChange();
-	}
-
-	get childElements() {
-		return [...this.children].filter(ele => ele instanceof this.constructor);
-	}
-
-	disableOnDrag() {
-		// ignore components on drag
+		
+		// ignore components on drag over
 		this.addEventListener('dragstart', e => {
 			if(e.dataTransfer.getData('tab')) {
 				this.setAttribute('drag-over', '');
@@ -107,7 +114,19 @@ export default class Panel extends HTMLElement {
 		};
 
 		this.addEventListener('dragend', dragEndHandler);
+		this.addEventListener('dragcancel', dragEndHandler);
+		this.addEventListener('dragleave', dragEndHandler);
 		this.addEventListener('drop', dragEndHandler);
+	}
+
+	slotChangeCallback() {
+
+		if(this.removeOnEmtpy && this.children.length === 0) {
+			this.parentNode.removeChild(this);
+		}
+
+		this.layoutUpdate();
+		this.onLayoutChange();
 	}
 
 	resizable() {
@@ -328,7 +347,7 @@ export default class Panel extends HTMLElement {
 		this.setLayoutTempalte(this.columns, this.rows);
 	}
 
-	setLayoutTempalte(columnTemplate, rowTemplate) {
+	setLayoutTempalte(columnTemplate = [1, 1], rowTemplate = [1, 1]) {
 		if(this.resizableColumn) {
 			this.style.gridTemplateColumns = columnTemplate.map(n => n.toFixed(4) + "fr").join(" ");
 		}
@@ -340,5 +359,36 @@ export default class Panel extends HTMLElement {
 	}
 
 }
+
+// append required styles to head
+const requiredStyles = `
+	
+	/* hidden tab content */
+	gyro-group > [tab]:not([active]) {
+		display: none;
+		visibility: hidden;
+		opacity: 0;
+		transition: none;
+		pointer-events: none;
+	}
+
+	/* drag over overlay */
+	[drag-over] gyro-group > * {
+		pointer-events: none;
+	}
+
+	gyro-group > * {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+`;
+
+const layoutStyle = document.createElement('style');
+layoutStyle.innerHTML = requiredStyles;
+document.head.appendChild(layoutStyle);
 
 customElements.define("gyro-layout", Panel);

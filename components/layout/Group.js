@@ -3,13 +3,23 @@ import Column from './Column.js';
 export default class Group extends Column {
 
 	static get observedAttributes() {
-		return ['active-tab', 'show-tabs', 'fixed-tabs'];
+		return ['active-tab', 'show-tabs'];
 	}
 
 	static get template() {
 		const groupTemplate = document.createElement("template");
 		groupTemplate.innerHTML = `
 			<style>
+				:host {
+					position: relative;
+					overflow: hidden;
+					z-index: 1000;
+					display: flex;
+					flex-direction: column;
+					background: var(--panel-background);
+					color: var(--tab-font-color);
+				}
+
 				.tabs {
 					display: flex;
 					background: var(--tabs-background);
@@ -73,10 +83,34 @@ export default class Group extends Column {
 				slot {
 					display: block;
 					position: absolute;
-					top: 30px;
+					top: 0;
 					left: 0;
 					bottom: 0;
 					right: 0;
+				}
+
+				:host([show-tabs]) slot {
+					top: 30px;
+				}
+
+				:host([drag-over]) {
+					--left: 0;
+					--top: 0;
+					--width: 100%;
+					--height: 100%;
+				}
+
+				:host([drag-over])::after {
+					content: '';
+					background: white;
+					opacity: 0.05;
+					position: absolute;
+					top: var(--top);
+					left: var(--left);
+					z-index: 10000;
+					width: var(--width);
+					height: var(--height);
+					pointer-events: none;
 				}
 			</style>
 			<div class="tabs"></div>
@@ -128,13 +162,9 @@ export default class Group extends Column {
 	}
 
 	slotChangeCallback(e) {
-		if(this.components.length === 0) {
-			this.parentNode.removeChild(this);
-			return;
-		}
+		super.slotChangeCallback(e);
 
 		this.renderTabs();
-
 		this.setActiveTab(this.components.length-1);
 	}
 
@@ -310,12 +340,6 @@ export default class Group extends Column {
 						component.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>`;
 					}
 				}
-
-				tab.onmousedown = e => {
-					// if(e.which === 2) {
-					// 	component.remove();
-					// }
-				}
 			}
 
 			return tab;
@@ -328,20 +352,6 @@ export default class Group extends Column {
 				const tab = createTab(components[i]);
 				tabs.appendChild(tab);
 			}
-		}
-
-		// append pseudo "+" tab
-		if(!this.hasAttribute('fixed-tabs') && this.tabs.length > 0) {
-			const addTab = createTab();
-			addTab.innerHTML = '<gyro-icon icon="Add">+</gyro-icon>';
-			addTab.classList.add('add-tab');
-			addTab.addEventListener('click', () => {
-				const cloned = components[components.length-1];
-				const newTab = document.createElement(cloned.localName);
-				newTab.setAttribute('tab', cloned.getAttribute('tab'));
-				this.appendChild(newTab);
-			});
-			tabs.appendChild(addTab);
 		}
 
 		// set active tab if undefined

@@ -7,18 +7,7 @@ export default class Column extends Panel {
 		
 		this.resizableRow = true;
 		this.resizableColumn = false;
-	}
-
-	connectedCallback() {
-		this.resizable();
-	}
-
-	slotChangeCallback() {
-		if(this.children.length === 0) {
-			this.remove();
-		}
-		
-		super.slotChangeCallback();
+		this.removeOnEmtpy = true;
 	}
 
 }
