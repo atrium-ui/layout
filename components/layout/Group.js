@@ -302,6 +302,7 @@ export default class Group extends Column {
 		// creates tab ele for component
 		const createTab = component => {
 			const tab = document.createElement("span");
+			tab.setAttribute('draggable', 'true');
 			tab.className = "tab";
 
 			if(component) {
