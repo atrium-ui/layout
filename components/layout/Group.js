@@ -42,6 +42,7 @@ export default class Group extends Column {
 					cursor: pointer;
 					position: relative;
 					min-width: 80px;
+					padding: 0 10px;
 				}
 
 				.tab[data-groupid] {
