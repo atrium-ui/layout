@@ -69,7 +69,8 @@ export default class Group extends Column {
 				}
 
 				.tab:active {
-					background: var(--tab-background);
+					background: var(--tab-active-background);
+					opacity: 0.65;
 				}
 				
 				.tab[active] {
