@@ -29,7 +29,6 @@ export default class Group extends Column {
 					z-index: 1000;
 					pointer-events: all;
 					user-select: none;
-					border-bottom: 1px solid var(--gyro-background);
 				}
 				
 				.tab {
@@ -43,6 +42,7 @@ export default class Group extends Column {
 					position: relative;
 					min-width: 80px;
 					padding: 0 10px;
+					border-bottom: var(--tab-bottom-border);
 				}
 
 				.tab[data-groupid] {
@@ -51,6 +51,8 @@ export default class Group extends Column {
 				
 				.tab[active] {
 					color: var(--tab-font-color);
+					background: var(--tab-active-background);
+					border-bottom: var(--tab-active-bottom-border);
 				}
 				
 				.tab::before {
@@ -71,10 +73,6 @@ export default class Group extends Column {
 				.tab:active {
 					background: var(--tab-active-background);
 					opacity: 0.65;
-				}
-				
-				.tab[active] {
-					background: var(--tab-active-background);
 				}
 
 				.add-tab {
