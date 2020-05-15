@@ -37,10 +37,10 @@ export default class Group extends Column {
 					justify-content: center;
 					background: var(--tab-background);
 					margin: 0 1px 0 0;
-					height: 30px;
+					height: 28px;
 					cursor: pointer;
 					position: relative;
-					min-width: 80px;
+					min-width: 70px;
 					padding: 0 10px;
 					border-bottom: var(--tab-bottom-border);
 				}
