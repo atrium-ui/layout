@@ -4,15 +4,15 @@ export default class Panel extends HTMLElement {
 		return `
 			<style>
 				:host {
-					--panel-background: #272727;
-					--tab-background: #212121;
-					--tab-active-background: #272727;
-					--tab-hover-background: #333333;
+					--panel-background: #2A2A2A;
+					--tab-background: transparent;
+					--tab-active-background: #2A2A2A;
+					--tab-hover-background: #2E2E2E;
 					--tabs-background: #212121;
 					--tab-font-color: #eeeeee;
 					--split-bar-color: white;
 					--split-bar-color-hover: rgba(255, 255, 255, 0.2);
-					--layout-grid-gap: 3px;
+					--layout-grid-gap: 2px;
 
 					position: relative;
 					overflow: hidden;

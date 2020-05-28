@@ -40,9 +40,11 @@ export default class Group extends Column {
 					height: 28px;
 					cursor: pointer;
 					position: relative;
-					min-width: 70px;
+					min-width: 75px;
 					padding: 0 10px;
 					border-bottom: var(--tab-bottom-border);
+					color: var(--tab-font-color);
+					opacity: 0.5;
 				}
 
 				.tab[data-groupid] {
@@ -50,9 +52,9 @@ export default class Group extends Column {
 				}
 				
 				.tab[active] {
-					color: var(--tab-font-color);
 					background: var(--tab-active-background);
 					border-bottom: var(--tab-active-bottom-border);
+					opacity: 1;
 				}
 				
 				.tab::before {
@@ -66,13 +68,12 @@ export default class Group extends Column {
 				}
 				
 				.tab:hover {
-					color: var(--tab-font-color);
 					background: var(--tab-hover-background);
 				}
 
 				.tab:active {
 					background: var(--tab-active-background);
-					opacity: 0.65;
+					opacity: 1;
 				}
 
 				.add-tab {
@@ -90,7 +91,7 @@ export default class Group extends Column {
 				}
 
 				:host([show-tabs]) slot {
-					top: 30px;
+					top: 28px;
 				}
 
 				:host([drag-over]) {
@@ -322,7 +323,7 @@ export default class Group extends Column {
 					tab.dataset.groupid = groupid;
 				}
 	
-				tab.onclick = e => {
+				tab.onmousedown = e => {
 					const index = [...tab.parentNode.children].indexOf(tab);
 					this.activeTab = index;
 				}
@@ -337,18 +338,6 @@ export default class Group extends Column {
 					setTimeout(() => {
 						component.removeAttribute('drag-target');
 					}, 10);
-				}
-
-				tab.ondblclick = e => {
-					const url = prompt('URL');
-					const name = url.split("/")[url.split("/").length - 1];
-
-					if(name) {
-						tab.innerText = name;
-						tab.dataset.groupid = name;
-						component.setAttribute('tab', name);
-						component.innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen="true" height="100%" width="100%"></iframe>`;
-					}
 				}
 			}
 
