@@ -18,17 +18,23 @@ export default class Group extends Column {
 					flex-direction: column;
 					background: var(--panel-background);
 					color: var(--tab-font-color);
+					
+					--tab-height: 28px;
+					--tab-width: 75px;
+					--tab-font-size: 12px;
+					--tab-border-radius: 0px;
+					--tab-padding: 0px 10px;
 				}
-
+				
 				.tabs {
 					display: flex;
 					background: var(--tabs-background);
 					font-family: sans-serif;
 					color: #b5b5b5;
-					font-size: 12px;
 					z-index: 1000;
 					pointer-events: all;
 					user-select: none;
+					font-size: var(--tab-font-size);
 				}
 				
 				.tab {
@@ -37,14 +43,16 @@ export default class Group extends Column {
 					justify-content: center;
 					background: var(--tab-background);
 					margin: 0 1px 0 0;
-					height: 28px;
+					height: var(--tab-height);
 					cursor: pointer;
 					position: relative;
-					min-width: 75px;
-					padding: 0 10px;
+					min-width: var(--tab-width);
+					padding: var(--tab-padding);
 					border-bottom: var(--tab-bottom-border);
 					color: var(--tab-font-color);
 					opacity: 0.5;
+					border-top-left-radius: var(--tab-border-radius);
+					border-top-right-radius: var(--tab-border-radius);
 				}
 
 				.tab[data-groupid] {
@@ -74,11 +82,6 @@ export default class Group extends Column {
 				.tab:active {
 					background: var(--tab-active-background);
 					opacity: 1;
-				}
-
-				.add-tab {
-					font-size: 14px;
-					--icon-size: 10px;
 				}
 
 				slot {
