@@ -94,7 +94,7 @@ export default class Group extends Column {
 				}
 
 				:host([show-tabs]) slot {
-					top: 28px;
+					top: var(--tab-height);
 				}
 
 				:host([drag-over]) {
