@@ -144,7 +144,6 @@ export default class Panel extends HTMLElement {
 			// check if bounds needs update
 			if(this.boundsInvalid) {
 				this.updateBounds();
-				this.boundsInvalid = false;
 			}
 			
 			const children = this.childElements;
@@ -284,6 +283,10 @@ export default class Panel extends HTMLElement {
 		window.addEventListener('pointerdown', pointerDownHandler);
 		window.addEventListener('pointerup', cancelPointerHandler);
 		window.addEventListener('pointercancel', cancelPointerHandler);
+
+		if(this.boundsInvalid) {
+			this.updateBounds();
+		}
 	}
 
 	onLayoutChange() {
@@ -302,6 +305,8 @@ export default class Panel extends HTMLElement {
 		}
 
 		this.layoutUpdate();
+
+		this.boundsInvalid = false;
 	}
 
 	onResize(delta, childIndex) {
