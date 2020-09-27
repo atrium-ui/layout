@@ -19,11 +19,12 @@ export default class Group extends Column {
 					background: var(--panel-background);
 					color: var(--tab-font-color);
 					
-					--tab-height: 28px;
-					--tab-width: 75px;
-					--tab-font-size: 12px;
-					--tab-border-radius: 0px;
-					--tab-padding: 0px 10px;
+					--tab-height: 22px;
+					--tab-width: auto;
+					--tab-font-size: 11px;
+					--tab-border-radius: 3px;
+					--tab-padding: 0px 15px;
+					--tab-border: none;
 				}
 				
 				.tabs {
@@ -35,6 +36,7 @@ export default class Group extends Column {
 					pointer-events: all;
 					user-select: none;
 					font-size: var(--tab-font-size);
+					padding: 3px 3px 0 3px;
 				}
 				
 				.tab {
@@ -53,6 +55,7 @@ export default class Group extends Column {
 					opacity: 0.5;
 					border-top-left-radius: var(--tab-border-radius);
 					border-top-right-radius: var(--tab-border-radius);
+					border: var(--tab-border);
 				}
 
 				.tab[data-groupid] {
@@ -94,7 +97,7 @@ export default class Group extends Column {
 				}
 
 				:host([show-tabs]) slot {
-					top: var(--tab-height);
+					top: 30px;
 				}
 
 				:host([drag-over]) {
