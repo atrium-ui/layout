@@ -121,9 +121,11 @@ export default class Panel extends HTMLElement {
 
 	slotChangeCallback() {
 
-		if(this.removeOnEmtpy && this.children.length === 0) {
-			this.parentNode.removeChild(this);
-		}
+		requestAnimationFrame(() => {
+			if(this.removeOnEmtpy && this.children.length === 0) {
+				this.parentNode.removeChild(this);
+			}
+		});
 
 		this.layoutUpdate();
 		this.onLayoutChange();
