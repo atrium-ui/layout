@@ -1,11 +1,22 @@
 {
-  "name": "@uncut/gyro-layout",
+  "name": "@atrium-ui/layout",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/layout.cjs.js",
+  "module": "dist/layout.es.js",
+  "types": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint --ext .ts .",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lit": "^2.2.7"
+  },
+  "devDependencies": {
+    "vite": "^2.9.14"
+  }
 }
