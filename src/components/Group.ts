@@ -15,8 +15,7 @@ export class Group extends Column {
 					z-index: 1000;
 					display: flex;
 					flex-direction: column;
-					background: var(--panel-background);
-					color: var(--tab-font-color);
+					color: inherit;
 					
 					--tab-height: 22px;
 					--tab-width: auto;
@@ -24,11 +23,17 @@ export class Group extends Column {
 					--tab-border-radius: 3px;
 					--tab-padding: 0px 15px;
 					--tab-border: none;
+
+          --tab-background: #151515;
+          --tab-hover-background: #383d47;
+					--tab-active-background: #282c34;
+          
+          --tab-bottom-border: none;
+					--tab-active-bottom-border: none;
 				}
 				
 				.tabs {
 					display: flex;
-					background: var(--tabs-background);
 					font-family: sans-serif;
 					color: #b5b5b5;
 					z-index: 1000;
@@ -96,7 +101,7 @@ export class Group extends Column {
 				}
 
 				:host([show-tabs]) slot {
-					top: 30px;
+					top: calc(var(--tab-height) + 3px);
 				}
 
 				:host([drag-over]) {

@@ -3,12 +3,6 @@ export class Panel extends HTMLElement {
     return `
 			<style>
 				:host {
-					--panel-background: #2A2A2A;
-					--tab-background: transparent;
-					--tab-active-background: #2A2A2A;
-					--tab-hover-background: #2E2E2E;
-					--tabs-background: #212121;
-					--tab-font-color: #eeeeee;
 					--split-bar-color: white;
 					--split-bar-color-hover: rgba(255, 255, 255, 0.2);
 					--layout-grid-gap: 2px;
@@ -17,6 +11,8 @@ export class Panel extends HTMLElement {
 					overflow: hidden;
 					display: grid;
 					grid-gap: var(--layout-grid-gap);
+          width: 100%;
+          height: 100%;
 				}
 
 				.split-bar {
@@ -133,8 +129,7 @@ export class Panel extends HTMLElement {
     const splitBar = document.createElement("div");
     splitBar.className = "split-bar";
 
-    const borderSizeVar =
-      getComputedStyle(this).getPropertyValue("--layout-grid-gap");
+    const borderSizeVar = getComputedStyle(this).getPropertyValue("--layout-grid-gap");
     const borderSize = parseInt(borderSizeVar);
 
     let pointerDownEvent = null;
@@ -157,13 +152,8 @@ export class Panel extends HTMLElement {
       const columnBounds = column.boundingBox;
 
       const borderX =
-        columnBounds.left +
-        this.width * (this.columns[index] / children.length) +
-        borderSize / 2;
-      const borderY =
-        columnBounds.top +
-        this.height * (this.rows[index] / children.length) +
-        borderSize / 2;
+        columnBounds.left + this.width * (this.columns[index] / children.length) + borderSize / 2;
+      const borderY = columnBounds.top + this.height * (this.rows[index] / children.length) + borderSize / 2;
 
       const minElementFraction = 0.05;
 
@@ -173,8 +163,7 @@ export class Panel extends HTMLElement {
 
       const delta = [
         this.columns[index] + mouseDelta[0] / this.width > minElementFraction &&
-        this.columns[index + 1] - mouseDelta[0] / this.width >
-          minElementFraction
+        this.columns[index + 1] - mouseDelta[0] / this.width > minElementFraction
           ? mouseDelta[0]
           : 0,
 
@@ -230,10 +219,7 @@ export class Panel extends HTMLElement {
         if (resizeX) {
           splitBar.className = "split-bar vertical";
           splitBar.style.setProperty("--size", borderSize);
-          splitBar.style.setProperty(
-            "--x",
-            pointerDownEvent ? borderX + delta[0] : borderX
-          );
+          splitBar.style.setProperty("--x", pointerDownEvent ? borderX + delta[0] : borderX);
           splitBar.style.setProperty("--y", column.boundingBox.top);
           splitBar.style.height = column.height + "px";
         }
@@ -241,10 +227,7 @@ export class Panel extends HTMLElement {
         if (resizeY) {
           splitBar.className = "split-bar horizontal";
           splitBar.style.setProperty("--size", borderSize);
-          splitBar.style.setProperty(
-            "--y",
-            pointerDownEvent ? borderY + delta[1] : borderY
-          );
+          splitBar.style.setProperty("--y", pointerDownEvent ? borderY + delta[1] : borderY);
           splitBar.style.setProperty("--x", column.boundingBox.left);
           splitBar.style.width = column.width + "px";
         }
@@ -363,14 +346,10 @@ export class Panel extends HTMLElement {
 
   setLayoutTempalte(columnTemplate = [1, 1], rowTemplate = [1, 1]) {
     if (this.resizableColumn) {
-      this.style.gridTemplateColumns = columnTemplate
-        .map((n) => n.toFixed(4) + "fr")
-        .join(" ");
+      this.style.gridTemplateColumns = columnTemplate.map((n) => n.toFixed(4) + "fr").join(" ");
     }
     if (this.resizableRow) {
-      this.style.gridTemplateRows = rowTemplate
-        .map((n) => n.toFixed(4) + "fr")
-        .join(" ");
+      this.style.gridTemplateRows = rowTemplate.map((n) => n.toFixed(4) + "fr").join(" ");
     }
 
     window.dispatchEvent(new Event("layout"));
