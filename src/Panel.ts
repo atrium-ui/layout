@@ -1,123 +1,98 @@
+const styles = `
+  :host {
+		--split-bar-color: rgba(255, 255, 255, 0.3);
+		--split-bar-color-hover: rgba(255, 255, 255, 0.2);
+		--layout-grid-gap: 3px;
+
+		position: relative;
+		overflow: hidden;
+		display: grid;
+		grid-gap: var(--layout-grid-gap);
+    width: 100%;
+    height: 100%;
+	}
+
+	.split-bar {
+		--size: 0;
+		--x: 0;
+		--y: 0;
+
+		z-index: 100000;
+		position: fixed;
+		left: calc(var(--x, 0) * 1px);
+		top: calc(var(--y, 0) * 1px);
+		background: var(--split-bar-color-hover);
+	}
+	.split-bar[active] {
+		background: var(--split-bar-color);
+	}
+	.split-bar.vertical {
+		height: 100%;
+		width: calc(var(--size) * 1px);
+		transform: translate(-50%, 0);
+	}
+	.split-bar.horizontal {
+		width: 100%;
+		height: calc(var(--size) * 1px);
+		transform: translate(0, -50%);
+	}
+	.split-bar::after {
+		content: "";
+		z-index: 10000;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	.split-bar.vertical::after {
+		width: 200px;
+		height: 100%;
+		transform: translate(-50%, 0);
+		cursor: col-resize;
+	}
+	.split-bar.horizontal::after {
+		height: 200px;
+		width: 100%;
+		transform: translate(0, -50%);
+		cursor: row-resize;
+	}
+`;
+
 export class Panel extends HTMLElement {
-  static get layoutStyles() {
-    return `
-			<style>
-				:host {
-					--split-bar-color: white;
-					--split-bar-color-hover: rgba(255, 255, 255, 0.2);
-					--layout-grid-gap: 2px;
+  template() {
+    return "<slot></slot>";
+  }
 
-					position: relative;
-					overflow: hidden;
-					display: grid;
-					grid-gap: var(--layout-grid-gap);
-          width: 100%;
-          height: 100%;
-				}
-
-				.split-bar {
-					--size: 0;
-					--x: 0;
-					--y: 0;
-
-					z-index: 100000;
-					position: fixed;
-					left: calc(var(--x, 0) * 1px);
-					top: calc(var(--y, 0) * 1px);
-					opacity: 0.25;
-					background: var(--split-bar-color-hover);
-				}
-				.split-bar[active] {
-					background: var(--split-bar-color);
-				}
-				.split-bar.vertical {
-					height: 100%;
-					width: calc(var(--size) * 1px);
-					transform: translate(-50%, 0);
-				}
-				.split-bar.horizontal {
-					width: 100%;
-					height: calc(var(--size) * 1px);
-					transform: translate(0, -50%);
-				}
-				.split-bar::after {
-					content: "";
-					z-index: 10000;
-					position: absolute;
-					top: 0;
-					left: 0;
-				}
-				.split-bar.vertical::after {
-					width: 200px;
-					height: 100%;
-					transform: translate(-50%, 0);
-					cursor: col-resize;
-				}
-				.split-bar.horizontal::after {
-					height: 200px;
-					width: 100%;
-					transform: translate(0, -50%);
-					cursor: row-resize;
-				}
-			</style>
-		`;
+  styles() {
+    return styles;
   }
 
   get childElements() {
-    return [...this.children].filter((ele) => ele instanceof this.constructor);
+    return [...this.children].filter((ele) => ele instanceof Panel);
   }
 
-  constructor() {
-    super();
-
-    this.attachShadow({ mode: "open" });
-
-    const slot = document.createElement("slot");
-    this.shadowSlot = slot;
-
-    this.shadowRoot.innerHTML = this.constructor.layoutStyles;
-    this.shadowRoot.appendChild(slot);
-
-    this.columns = [];
-    this.rows = [];
-
-    this.resizableRow = false;
-    this.resizableColumn = true;
-    this.removeOnEmtpy = false;
-
-    this.boundsInvalid = true;
-
-    slot.addEventListener("slotchange", (e) => this.slotChangeCallback(e));
-
-    window.addEventListener("resize", () => {
-      this.boundsInvalid = true;
-    });
+  get shadowSlot() {
+    for (const child of this.shadowRoot?.children || []) {
+      if (child instanceof HTMLSlotElement) return child;
+    }
+    return null;
   }
 
-  connectedCallback() {
-    this.resizable();
+  columns: number[] = [];
+  rows: number[] = [];
 
-    // ignore components on drag over
-    this.addEventListener("dragstart", (e) => {
-      if (e.dataTransfer.getData("tab")) {
-        this.setAttribute("drag-over", "");
-      }
-    });
+  resizableRow = false;
+  resizableColumn = true;
+  removeOnEmtpy = false;
+  boundsInvalid = true;
 
-    const dragEndHandler = () => {
-      this.removeAttribute("drag-over", "");
-    };
-
-    this.addEventListener("dragend", dragEndHandler);
-    this.addEventListener("dragcancel", dragEndHandler);
-    this.addEventListener("dragleave", dragEndHandler);
-    this.addEventListener("drop", dragEndHandler);
-  }
+  chacnelDragOver = () => {
+    this.removeAttribute("drag-over");
+  };
 
   slotChangeCallback() {
     requestAnimationFrame(() => {
       if (this.removeOnEmtpy && this.children.length === 0) {
-        this.parentNode.removeChild(this);
+        this.parentNode?.removeChild(this);
       }
     });
 
@@ -125,14 +100,55 @@ export class Panel extends HTMLElement {
     this.onLayoutChange();
   }
 
+  constructor() {
+    super();
+
+    this.addEventListener("dragend", this.chacnelDragOver);
+    this.addEventListener("dragcancel", this.chacnelDragOver);
+    this.addEventListener("dragleave", this.chacnelDragOver);
+    this.addEventListener("drop", this.chacnelDragOver);
+
+    // ignore components on drag over
+    this.addEventListener("dragstart", (e) => {
+      if (e.dataTransfer?.getData("tab")) {
+        this.setAttribute("drag-over", "");
+      }
+    });
+  }
+
+  connectedCallback() {
+    this.attachShadow({ mode: "open" });
+
+    if (!this.shadowRoot) {
+      throw new Error("Failed to attach shadow root");
+    }
+
+    this.shadowRoot.innerHTML = this.template();
+    const style = document.createElement("style");
+    style.innerHTML = this.styles();
+    this.shadowRoot.appendChild(style);
+
+    if (this.shadowSlot) {
+      this.shadowSlot.onslotchange = (e) => this.slotChangeCallback();
+    }
+
+    this.slotChangeCallback();
+
+    window.addEventListener("resize", () => {
+      this.boundsInvalid = true;
+    });
+
+    this.resizable();
+  }
+
   resizable() {
     const splitBar = document.createElement("div");
     splitBar.className = "split-bar";
 
     const borderSizeVar = getComputedStyle(this).getPropertyValue("--layout-grid-gap");
-    const borderSize = parseInt(borderSizeVar);
+    const borderSize = Number.parseInt(borderSizeVar);
 
-    let pointerDownEvent = null;
+    let pointerDownEvent: PointerEvent | null = null;
     let resizeAvailable = [0, 0];
 
     const pointerMoveHandler = (e, index) => {
@@ -152,8 +168,13 @@ export class Panel extends HTMLElement {
       const columnBounds = column.boundingBox;
 
       const borderX =
-        columnBounds.left + this.width * (this.columns[index] / children.length) + borderSize / 2;
-      const borderY = columnBounds.top + this.height * (this.rows[index] / children.length) + borderSize / 2;
+        columnBounds.left +
+        this.width * (this.columns[index] / children.length) +
+        borderSize / 2;
+      const borderY =
+        columnBounds.top +
+        this.height * (this.rows[index] / children.length) +
+        borderSize / 2;
 
       const minElementFraction = 0.05;
 
@@ -219,17 +240,23 @@ export class Panel extends HTMLElement {
         if (resizeX) {
           splitBar.className = "split-bar vertical";
           splitBar.style.setProperty("--size", borderSize);
-          splitBar.style.setProperty("--x", pointerDownEvent ? borderX + delta[0] : borderX);
+          splitBar.style.setProperty(
+            "--x",
+            pointerDownEvent ? borderX + delta[0] : borderX,
+          );
           splitBar.style.setProperty("--y", column.boundingBox.top);
-          splitBar.style.height = column.height + "px";
+          splitBar.style.height = `${column.height}px`;
         }
 
         if (resizeY) {
           splitBar.className = "split-bar horizontal";
           splitBar.style.setProperty("--size", borderSize);
-          splitBar.style.setProperty("--y", pointerDownEvent ? borderY + delta[1] : borderY);
+          splitBar.style.setProperty(
+            "--y",
+            pointerDownEvent ? borderY + delta[1] : borderY,
+          );
           splitBar.style.setProperty("--x", column.boundingBox.left);
-          splitBar.style.width = column.width + "px";
+          splitBar.style.width = `${column.width}px`;
         }
       }
 
@@ -257,7 +284,9 @@ export class Panel extends HTMLElement {
       }
     };
 
-    let activeChild = null;
+    let activeChild: number | null = null;
+
+    this.addEventListener("pointerdown", pointerDownHandler);
 
     window.addEventListener("pointermove", (e) => {
       if (resizeAvailable[0] || resizeAvailable[1]) {
@@ -273,8 +302,6 @@ export class Panel extends HTMLElement {
         }
       }
     });
-
-    window.addEventListener("pointerdown", pointerDownHandler);
     window.addEventListener("pointerup", cancelPointerHandler);
     window.addEventListener("pointercancel", cancelPointerHandler);
 
@@ -287,12 +314,16 @@ export class Panel extends HTMLElement {
     window.dispatchEvent(new Event("resize"));
   }
 
+  width = 0;
+  height = 0;
+  boundingBox?: DOMRect;
+
   updateBounds() {
     this.width = this.clientWidth;
     this.height = this.clientHeight;
     this.boundingBox = this.getBoundingClientRect();
 
-    for (let child of this.childElements) {
+    for (const child of this.childElements) {
       child.width = child.clientWidth;
       child.height = child.clientHeight;
       child.boundingBox = child.getBoundingClientRect();
@@ -346,45 +377,16 @@ export class Panel extends HTMLElement {
 
   setLayoutTempalte(columnTemplate = [1, 1], rowTemplate = [1, 1]) {
     if (this.resizableColumn) {
-      this.style.gridTemplateColumns = columnTemplate.map((n) => n.toFixed(4) + "fr").join(" ");
+      this.style.gridTemplateColumns = columnTemplate
+        .map((n) => `${n.toFixed(4)}fr`)
+        .join(" ");
+      this.style.gridTemplateRows = "1fr";
     }
     if (this.resizableRow) {
-      this.style.gridTemplateRows = rowTemplate.map((n) => n.toFixed(4) + "fr").join(" ");
+      this.style.gridTemplateColumns = "1fr";
+      this.style.gridTemplateRows = rowTemplate.map((n) => `${n.toFixed(4)}fr`).join(" ");
     }
 
     window.dispatchEvent(new Event("layout"));
   }
 }
-
-// append required styles to head
-const requiredStyles = `
-	
-	/* hidden tab content */
-	gyro-group > [tab]:not([active]) {
-		display: none;
-		visibility: hidden;
-		opacity: 0;
-		transition: none;
-		pointer-events: none;
-	}
-
-	/* drag over overlay */
-	[drag-over] gyro-group > * {
-		pointer-events: none;
-	}
-
-	gyro-group > * {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
-
-`;
-
-const layoutStyle = document.createElement("style");
-layoutStyle.innerHTML = requiredStyles;
-document.head.appendChild(layoutStyle);
-
-customElements.define("gyro-layout", Panel);

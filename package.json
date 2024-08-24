@@ -1,22 +1,28 @@
 {
   "name": "@atrium-ui/layout",
-  "version": "1.0.1",
-  "description": "",
-  "main": "dist/layout.cjs.js",
-  "module": "dist/layout.es.js",
+  "version": "2.0.0",
+  "author": "luckydye",
+  "description": "A simple panel layout framework based on css grid.",
+  "license": "MIT",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "type": "module",
   "types": "index.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint --ext .ts .",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "lit": "^2.2.7"
+    "build": "tsup"
   },
   "devDependencies": {
-    "vite": "^2.9.14"
+    "@atrium-ui/codestyle": "^1.1.1",
+    "@biomejs/biome": "^1.8.3",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2"
+  },
+  "tsup": {
+    "entry": ["src/index.ts"],
+    "format": ["esm", "cjs"],
+    "sourcemap": true,
+    "clean": true
   }
 }

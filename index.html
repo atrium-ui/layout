@@ -1,63 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.7" />
-    <meta name="theme-color" content="#272727" />
-    <title>Layout</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=0.7" />
+        <title>Layout</title>
 
-    <script type="module" src="./src/index.ts"></script>
+        <script type="module" src="./src/index.ts"></script>
 
-    <style>
-      body {
-        background: hsla(0, 0%, 8%, 1);
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-      }
+        <style>
+            body {
+                background: #1b1b1b;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                font-family: Arial, Helvetica, sans-serif;
+            }
 
-      placeholder {
-        display: block;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 42px;
-        font-weight: 100;
-        font-family: sans-serif;
-        color: grey;
-      }
+            placeholder {
+                display: flex;
+                justify-content: center;
+                height: 100%;
+                align-items: center;
+                font-size: 42px;
+                font-weight: 100;
+                color: white;
+                background: #252527;
+            }
 
-      gyro-layout {
-        grid-template-columns: 1fr 2fr;
-        flex: 1;
-      }
-    </style>
-  </head>
+            a-layout {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                grid-template-rows: 1fr 1fr;
+                flex: 1;
+            }
 
-  <body>
-    <gyro-layout>
-      <gyro-layout-column>
-        <gyro-group show-tabs>
-          <placeholder tab="Start">1</placeholder>
-        </gyro-group>
-        <gyro-group show-tabs>
-          <placeholder tab="Start">2</placeholder>
-        </gyro-group>
-      </gyro-layout-column>
+            @media (prefers-color-scheme: light) {
+                body {
+                    background: #e6e6e6;
+                }
+            }
+        </style>
+    </head>
 
-      <gyro-layout-column>
-        <gyro-group show-tabs>
-          <placeholder tab="Start">3</placeholder>
-        </gyro-group>
-        <gyro-group show-tabs>
-          <placeholder tab="Start">4</placeholder>
-        </gyro-group>
-      </gyro-layout-column>
-    </gyro-layout>
-  </body>
+    <body>
+        <a-layout>
+            <a-layout-column>
+                <a-layout-group tabs>
+                    <placeholder tab="Component 1">1</placeholder>
+                </a-layout-group>
+                <a-layout-group tabs>
+                    <placeholder tab="Component 2">2</placeholder>
+                </a-layout-group>
+            </a-layout-column>
+
+            <a-layout-column>
+                <a-layout-group tabs>
+                    <placeholder tab="Component 3">3</placeholder>
+                </a-layout-group>
+                <a-layout-group tabs>
+                    <placeholder tab="Component 4">4</placeholder>
+                </a-layout-group>
+            </a-layout-column>
+        </a-layout>
+    </body>
 </html>
