@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: 20
       - name: Build index.html
-        run: npm ci && npm run dev:build
+        run: npm ci && npx vite build --base layout
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
