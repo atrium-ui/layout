@@ -10,6 +10,7 @@
   "types": "index.ts",
   "scripts": {
     "dev": "vite",
+    "dev:build": "vite build",
     "build": "tsup"
   },
   "devDependencies": {
